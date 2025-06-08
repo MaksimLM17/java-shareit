@@ -1,12 +1,12 @@
 package ru.practicum.shareit.user;
 
-import ru.practicum.shareit.user.dto.UpdateUser;
+import ru.practicum.shareit.user.dto.UpdateUserDto;
 
 public interface UserRepository {
 
     User create(User user);
 
-    User update(Integer userId, UpdateUser user);
+    User update(Integer userId, UpdateUserDto user);
 
     User get(Integer userId);
 

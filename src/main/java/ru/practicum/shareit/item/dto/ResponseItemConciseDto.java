@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ResponseItemConcise {
+public class ResponseItemConciseDto {
     private String name;
     private String description;
 }

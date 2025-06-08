@@ -4,7 +4,7 @@ import lombok.Data;
 import ru.practicum.shareit.annotation.NotBlankIfPresent;
 
 @Data
-public class UpdateItem {
+public class UpdateItemDto {
     @NotBlankIfPresent
     private String name;
     @NotBlankIfPresent

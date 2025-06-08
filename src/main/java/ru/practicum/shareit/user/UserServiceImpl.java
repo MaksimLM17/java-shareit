@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.DuplicateEmailException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.mapper.UserMapper;
-import ru.practicum.shareit.user.dto.UpdateUser;
+import ru.practicum.shareit.user.dto.UpdateUserDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceMemory implements UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
@@ -28,19 +28,19 @@ public class UserServiceMemory implements UserService {
     }
 
     @Override
-    public UserDto update(Integer userId, UpdateUser updateUser) {
-        log.debug("Получен запрос на обновление пользователя {}, с данными {}", userId, updateUser);
+    public UserDto update(Integer userId, UpdateUserDto updateUserDto) {
+        log.debug("Получен запрос на обновление пользователя {}, с данными {}", userId, updateUserDto);
         if (!userRepository.checkUser(userId)) {
             log.error("Пользователь с id {} не найден! При запросе на обновление пользователя", userId);
             throw new NotFoundException("Пользователь с id " + userId + " не найден!");
         }
-        if (updateUser.getEmail() != null) {
-            if (userRepository.existsByEmail(updateUser.getEmail())) {
-                log.error("Пользователь с данным email = {}, уже существует!", updateUser.getEmail());
+        if (updateUserDto.getEmail() != null) {
+            if (userRepository.existsByEmail(updateUserDto.getEmail())) {
+                log.error("Пользователь с данным email = {}, уже существует!", updateUserDto.getEmail());
                 throw new DuplicateEmailException("Пользователь с данным email уже существует");
             }
         }
-        User user = userRepository.update(userId, updateUser);
+        User user = userRepository.update(userId, updateUserDto);
         log.info("Пользователь с id = {} обновлен!", userId);
         return UserMapper.mapToDto(user);
     }

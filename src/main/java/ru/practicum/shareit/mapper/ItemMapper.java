@@ -1,7 +1,7 @@
 package ru.practicum.shareit.mapper;
 
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ResponseItemConcise;
+import ru.practicum.shareit.item.dto.ResponseItemConciseDto;
 import ru.practicum.shareit.item.model.Item;
 
 public class ItemMapper {
@@ -14,8 +14,8 @@ public class ItemMapper {
         return new Item(itemDto.getName(), itemDto.getDescription(),itemDto.getAvailable());
     }
 
-    public static ResponseItemConcise mapToResponseConcise(Item item) {
-        return new ResponseItemConcise(item.getName(), item.getDescription());
+    public static ResponseItemConciseDto mapToResponseConcise(Item item) {
+        return new ResponseItemConciseDto(item.getName(), item.getDescription());
     }
 
 }

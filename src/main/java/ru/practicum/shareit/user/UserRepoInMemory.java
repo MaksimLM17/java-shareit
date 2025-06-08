@@ -3,7 +3,7 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.dto.UpdateUser;
+import ru.practicum.shareit.user.dto.UpdateUserDto;
 import ru.practicum.shareit.util.CommonUtils;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ public class UserRepoInMemory implements UserRepository {
     }
 
     @Override
-    public User update(Integer userId, UpdateUser user) {
+    public User update(Integer userId, UpdateUserDto user) {
         User existingUser = users.get(userId);
         if (user.getName() != null) {
             existingUser.setName(user.getName());

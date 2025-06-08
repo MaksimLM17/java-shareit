@@ -3,7 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.item.dto.UpdateItem;
+import ru.practicum.shareit.item.dto.UpdateItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.util.CommonUtils;
 
@@ -29,7 +29,7 @@ public class InMemoryItemRepo implements ItemRepository {
     }
 
     @Override
-    public Item update(Integer itemId, UpdateItem item) {
+    public Item update(Integer itemId, UpdateItemDto item) {
         Item existingItem = items.get(itemId);
         if (item.getName() != null) {
             existingItem.setName(item.getName());

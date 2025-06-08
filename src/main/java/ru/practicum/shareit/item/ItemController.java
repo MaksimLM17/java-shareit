@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ResponseItemConcise;
-import ru.practicum.shareit.item.dto.UpdateItem;
+import ru.practicum.shareit.item.dto.ResponseItemConciseDto;
+import ru.practicum.shareit.item.dto.UpdateItemDto;
 
 import java.util.Collection;
 
@@ -16,16 +16,17 @@ import java.util.Collection;
 public class ItemController {
 
     private final ItemService itemService;
+    private final static String USER_ID_IN_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
-    public ItemDto create(@RequestHeader("X-Sharer-User-Id") Integer userId, @RequestBody @Valid ItemDto itemDto) {
+    public ItemDto create(@RequestHeader(USER_ID_IN_HEADER) Integer userId, @RequestBody @Valid ItemDto itemDto) {
         return itemService.create(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto update(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                          @PathVariable Integer itemId, @RequestBody @Valid UpdateItem updateItem) {
-        return itemService.update(userId, itemId, updateItem);
+    public ItemDto update(@RequestHeader(USER_ID_IN_HEADER) Integer userId,
+                          @PathVariable Integer itemId, @RequestBody @Valid UpdateItemDto updateItemDto) {
+        return itemService.update(userId, itemId, updateItemDto);
     }
 
     @GetMapping("/{itemId}")
@@ -34,12 +35,12 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ResponseItemConcise> getItemsForUser(@RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public Collection<ResponseItemConciseDto> getItemsForUser(@RequestHeader(USER_ID_IN_HEADER) Integer userId) {
         return itemService.getItemsForUser(userId);
     }
 
     @GetMapping("/search")
-    public Collection<ResponseItemConcise> searchItems(@RequestParam (required = false) String text) {
+    public Collection<ResponseItemConciseDto> searchItems(@RequestParam (required = false) String text) {
         return itemService.searchItems(text);
     }
 }
