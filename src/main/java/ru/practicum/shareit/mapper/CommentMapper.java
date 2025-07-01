@@ -2,11 +2,9 @@ package ru.practicum.shareit.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
 import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.CommentDto;
 
-@Component
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 

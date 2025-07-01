@@ -10,7 +10,6 @@ import ru.practicum.shareit.mapper.UserMapper;
 import ru.practicum.shareit.user.dto.UpdateUserDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(UserDto userDto) {
         log.debug("Получен запрос на создание пользователя с данными {}", userDto);
-        if (existsEmail(userDto.getEmail(), userRepository.findAllEmail())) {
-            log.error("Пользователь с данным email = {}, уже существует", userDto.getEmail());
-            throw new DuplicateEmailException("Пользователь с данным email уже существует");
-        }
+        existEmail(userDto.getEmail());
         User user = userRepository.save(userMapper.mapToModel(userDto));
         log.info("Пользователь успешно добавлен, id = {}", user.getId());
         return userMapper.mapToDto(user);
@@ -37,10 +33,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId + " не найден!"));
         if (updateUserDto.getEmail() != null && !updateUserDto.getEmail().equals(user.getEmail())) {
-            if (existsEmail(updateUserDto.getEmail(), userRepository.findAllEmail())) {
-                log.error("Пользователь с данным email = {}, уже существует!", updateUserDto.getEmail());
-                throw new DuplicateEmailException("Пользователь с данным email уже существует");
-            }
+            existEmail(updateUserDto.getEmail());
         }
         userMapper.mapToModelFromUpdatedUser(updateUserDto, user);
         try {
@@ -69,7 +62,12 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
-    private boolean existsEmail(String email, List<String> emails) {
-        return emails.stream().anyMatch(e -> e.equalsIgnoreCase(email));
+    private void existEmail(String email) {
+        boolean hasEmail = userRepository.existsByEmail(email);
+        if (hasEmail) {
+            log.error("Пользователь с данным email = {}, уже существует!", email);
+            throw new DuplicateEmailException("Пользователь с данным email уже существует");
+        }
     }
 }
+
