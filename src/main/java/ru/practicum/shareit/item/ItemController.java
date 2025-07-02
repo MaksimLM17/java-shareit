@@ -3,7 +3,10 @@ package ru.practicum.shareit.item;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.comment.CommentRequestDto;
+import ru.practicum.shareit.comment.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemWithBookingDto;
 import ru.practicum.shareit.item.dto.ResponseItemConciseDto;
 import ru.practicum.shareit.item.dto.UpdateItemDto;
 
@@ -30,8 +33,8 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getById(@PathVariable Integer itemId) {
-        return itemService.getById(itemId);
+    public ItemWithBookingDto getById(@RequestHeader(USER_ID_IN_HEADER) Integer userId, @PathVariable Integer itemId) {
+        return itemService.getById(userId,itemId);
     }
 
     @GetMapping
@@ -42,5 +45,11 @@ public class ItemController {
     @GetMapping("/search")
     public Collection<ResponseItemConciseDto> searchItems(@RequestParam (required = false) String text) {
         return itemService.searchItems(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentResponseDto createComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Integer itemId,
+                                            @RequestHeader(USER_ID_IN_HEADER) Integer userId) {
+        return itemService.createComment(commentRequestDto, itemId, userId);
     }
 }
