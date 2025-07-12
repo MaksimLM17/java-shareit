@@ -33,3 +33,6 @@ logging:
           jpa.JpaTransactionManager: DEBUG
         transaction: INFO
         transaction.interceptor: TRACE
+    ru:
+      practicum:
+        shareit: DEBUG

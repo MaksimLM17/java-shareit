@@ -17,6 +17,8 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.mapper.BookingMapper;
 import ru.practicum.shareit.mapper.CommentMapper;
 import ru.practicum.shareit.mapper.ItemMapper;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -34,6 +36,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingMapper bookingMapper;
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final ItemRequestRepository requestRepository;
 
 
     @Override
@@ -41,10 +44,17 @@ public class ItemServiceImpl implements ItemService {
         log.debug("Получен запрос на добавление вещи пользователем {}, данные вещи {}", userId, itemDto);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId + " не найден, при создании вещи!"));
-        itemDto.setOwner(user);
-        Item item = itemRepository.save(ItemMapper.mapToModel(itemDto));
-        log.info("Вещь создана: {}", item);
-        return ItemMapper.mapToDto(item);
+        Item item = ItemMapper.mapToModel(itemDto);
+        item.setOwner(user);
+        if (itemDto.getRequestId() != null) {
+            ItemRequest itemRequest = requestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Запроса с id " + itemDto.getRequestId() +
+                            " не существует!"));
+            item.setRequest(itemRequest);
+        }
+        Item savedItem = itemRepository.save(item);
+        log.info("Вещь создана: {}", savedItem);
+        return ItemMapper.mapToDto(savedItem);
     }
 
     @Override
@@ -106,12 +116,13 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId + " не найден, при обновлении вещи!"));
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена!"));
-        boolean hasComment = bookingRepository.existsApprovedPastBookingForItem(userId, itemId, Status.APPROVED);
+        boolean hasComment = bookingRepository.existsApprovedPastBookingForItem(userId, itemId, Status.APPROVED, LocalDateTime.now());
 
         if (!hasComment) {
             log.error("Пользователь с id = {}, не брал вещь с id = {} в аренду", userId, itemId);
             throw new BadRequestException("Пользователь не брал эту вещь в аренду");
         }
+
         Comment comment = createCommentFromRequest(commentRequestDto, item, user);
         Comment savedComment = commentRepository.save(comment);
         log.info("Отзыв создан с id = {}", savedComment.getId());

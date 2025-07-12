@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentRequestDto {
 
-    @NotBlank
+    @NotBlank(message = "Текс отзыва не может быть пустым")
     private String text;
 }

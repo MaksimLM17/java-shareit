@@ -54,7 +54,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setBooker(user);
             booking.setStatus(Status.WAITING);
             Booking savedBooking = bookingRepository.save(booking);
-            log.info("Вещь с id = {}, забронирована!", item.getId());
+            log.info("Вещь с id = {}, забронирована, пользователем с id {}", item.getId(), booking.getBooker().getId());
             return bookingMapper.mapToDto(savedBooking);
         } else {
             log.error("Вещь с id = {}, недоступна для бронирования", item.getId());
@@ -64,7 +64,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto approve(Integer bookingId, Integer userId, boolean approved) {
-        log.info("Получен запрос на обновление статуса брони");
+        log.info("Получен запрос на обновление статуса брони с данными: bookingId = {}, userId = {}, approved = {}",
+                bookingId, userId, approved);
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронирование с id " + bookingId + " не найдено!"));
         if (!Objects.equals(booking.getItem().getOwner().getId(), userId)) {
@@ -76,12 +77,14 @@ public class BookingServiceImpl implements BookingService {
         if (approved) {
             booking.setStatus(Status.APPROVED);
             bookingRepository.save(booking);
-            log.info("Бронирование подтверждено!");
+            log.info("Бронирование подтверждено! С данными: bookingId = {}, itemId = {}",
+                    booking.getId(), booking.getItem().getId());
             return bookingMapper.mapToDto(booking);
         } else {
             booking.setStatus(Status.REJECTED);
             bookingRepository.save(booking);
-            log.info("Бронирование отклонено!");
+            log.info("Бронирование отклонено! С данными: bookingId = {}, itemId = {}",
+                    booking.getId(), booking.getItem().getId());
             return bookingMapper.mapToDto(booking);
         }
     }

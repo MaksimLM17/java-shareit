@@ -17,19 +17,19 @@ public class GlobalHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleValidationExceptionNotFound(NotFoundException e) {
-        return ErrorResponse.builder().message("Ошибка валидации").details(e.getMessage()).build();
+        return ErrorResponse.builder().error("Ошибка валидации").details(e.getMessage()).build();
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationExceptionBadRequest(BadRequestException e) {
-        return ErrorResponse.builder().message("Ошибка валидации").details(e.getMessage()).build();
+        return ErrorResponse.builder().error("Ошибка валидации").details(e.getMessage()).build();
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleValidationDuplicateEmail(DuplicateEmailException e) {
-        return ErrorResponse.builder().message("Ошибка валидации").details(e.getMessage()).build();
+        return ErrorResponse.builder().error("Ошибка валидации").details(e.getMessage()).build();
     }
 
     @ExceptionHandler
@@ -37,7 +37,7 @@ public class GlobalHandler {
     public ErrorResponse handleUnknown(Exception e, HttpServletRequest request) {
         log.error("Произошло неизвестное исключение при запросе с методом: {}," +
                 "адрес запроса: {},   с ошибкой: {}", request.getMethod(), request.getRequestURI(), e.getMessage());
-        return ErrorResponse.builder().message("Произошло неизвестное исключение, проверьте данные запроса")
+        return ErrorResponse.builder().error("Произошло неизвестное исключение, проверьте данные запроса")
                 .details(e.getMessage()).build();
     }
 }

@@ -24,15 +24,15 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> getAllBookingsByUserId(@Param("userId") Integer userId, @Param("state") String state);
 
     @Query("SELECT b FROM Booking b " +
-                  "JOIN b.item i " +
-                  "WHERE i.owner.id = :userId " +
-                  "AND (:state = 'ALL' OR " +
-                  "(:state = 'CURRENT' AND b.start <= CURRENT_TIMESTAMP AND b.end >= CURRENT_TIMESTAMP) OR " +
-                  "(:state = 'PAST' AND b.end < CURRENT_TIMESTAMP) OR " +
-                  "(:state = 'FUTURE' AND b.start > CURRENT_TIMESTAMP) OR " +
-                  "(:state = 'WAITING' AND b.status = 'WAITING') OR " +
-                  "(:state = 'REJECTED' AND b.status = 'REJECTED')) " +
-                  "ORDER BY b.start DESC")
+            "JOIN b.item i " +
+            "WHERE i.owner.id = :userId " +
+            "AND (:state = 'ALL' OR " +
+            "(:state = 'CURRENT' AND b.start <= CURRENT_TIMESTAMP AND b.end >= CURRENT_TIMESTAMP) OR " +
+            "(:state = 'PAST' AND b.end < CURRENT_TIMESTAMP) OR " +
+            "(:state = 'FUTURE' AND b.start > CURRENT_TIMESTAMP) OR " +
+            "(:state = 'WAITING' AND b.status = 'WAITING') OR " +
+            "(:state = 'REJECTED' AND b.status = 'REJECTED')) " +
+            "ORDER BY b.start DESC")
     List<Booking> getAllBookingsItemsUser(@Param("userId") Integer userId, @Param("state") String state);
 
     @Query("SELECT b FROM Booking b " +
@@ -58,9 +58,11 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("SELECT COUNT(b) > 0 FROM Booking b " +
             "WHERE b.booker.id = :userId " +
             "AND b.item.id = :itemId " +
-            "AND b.status = :state " +
-            "AND b.start <= CURRENT_TIMESTAMP")
-    boolean existsApprovedPastBookingForItem(@Param("userId") Integer userId,
-                                             @Param("itemId") Integer itemId,
-                                             @Param("state") Status state);
+            "AND b.status = :status " +
+            "AND b.end <= :currentTime")
+    boolean existsApprovedPastBookingForItem(
+            @Param("userId") Integer userId,
+            @Param("itemId") Integer itemId,
+            @Param("status") Status status,
+            @Param("currentTime") LocalDateTime currentTime);
 }

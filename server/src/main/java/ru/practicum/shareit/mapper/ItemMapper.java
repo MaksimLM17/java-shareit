@@ -2,10 +2,7 @@ package ru.practicum.shareit.mapper;
 
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.comment.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWithBookingDto;
-import ru.practicum.shareit.item.dto.ResponseItemConciseDto;
-import ru.practicum.shareit.item.dto.UpdateItemDto;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -13,7 +10,14 @@ import java.util.List;
 public class ItemMapper {
 
     public static ItemDto mapToDto(Item item) {
-        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable(), item.getOwner());
+        if (item.getRequest() != null) {
+            return new ItemDto(item.getId(), item.getName(), item.getDescription(),
+                    item.isAvailable(), item.getOwner(), item.getRequest().getId());
+        } else {
+            return new ItemDto(item.getId(), item.getName(), item.getDescription(),
+                    item.isAvailable(), item.getOwner(), null);
+        }
+
     }
 
     public static Item mapToModel(ItemDto itemDto) {
@@ -43,6 +47,10 @@ public class ItemMapper {
                                                           List<CommentDto> comments) {
         return new ItemWithBookingDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable(),
                 lastBooking, nextBooking, comments);
+    }
+
+    public static ItemResponseInRequestDto mapToResponseForItemRequest(Item item) {
+        return new ItemResponseInRequestDto(item.getId(), item.getName(), item.getOwner().getId());
     }
 
 }

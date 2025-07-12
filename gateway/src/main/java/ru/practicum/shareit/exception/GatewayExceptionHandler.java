@@ -24,7 +24,7 @@ public class GatewayExceptionHandler {
                     .append("; ");
         });
         log.error("Ошибка валидации: {}", errorMessage);
-        return ErrorResponse.builder().message("Ошибка валидации").details(errorMessage.toString()).build();
+        return ErrorResponse.builder().error("Ошибка валидации").details(errorMessage.toString()).build();
     }
 
     @ExceptionHandler
@@ -38,7 +38,7 @@ public class GatewayExceptionHandler {
                     .append("; ");
         });
         log.error("Ошибка валидации: {}", errorMessage);
-        return ErrorResponse.builder().message("Ошибка валидации").details(errorMessage.toString()).build();
+        return ErrorResponse.builder().error("Ошибка валидации").details(errorMessage.toString()).build();
     }
 
     @ExceptionHandler
@@ -49,6 +49,6 @@ public class GatewayExceptionHandler {
         String errorMessage = String.format("Передано некорректное значение параметра %s: %s",
                 parameterName, parameterValue);
         log.error(errorMessage);
-        return ErrorResponse.builder().message(errorMessage).details(e.getMessage()).build();
+        return ErrorResponse.builder().error(errorMessage).details(e.getMessage()).build();
     }
 }
