@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
 
 
 @Getter
@@ -30,6 +31,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id);
     }
 }
