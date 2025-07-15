@@ -7,7 +7,7 @@ import ru.practicum.shareit.user.User;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ItemTest {
+class ItemModelTest {
 
     @Test
     void testEqualsAndHashCode() {
