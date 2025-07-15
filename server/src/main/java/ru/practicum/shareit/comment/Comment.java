@@ -38,7 +38,7 @@ public class Comment {
     }
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         created = LocalDateTime.now();
     }
 
