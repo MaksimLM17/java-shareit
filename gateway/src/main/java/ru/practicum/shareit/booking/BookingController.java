@@ -24,19 +24,10 @@ public class BookingController {
 
     private static final String USER_ID_IN_HEADER = "X-Sharer-User-Id";
 
-    @GetMapping
-    public ResponseEntity<Object> getAllBookingsCurrentUser(@RequestHeader(USER_ID_IN_HEADER) @Positive Integer userId,
-                                              @RequestParam(name = "state", defaultValue = "all") String stateParam) {
-        BookingState state = BookingState.from(stateParam)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-        log.info("Get booking with state {}, userId={}", stateParam, userId);
-        return bookingClient.getAllBookingsCurrentUser(userId, state);
-    }
-
     @PostMapping
     public ResponseEntity<Object> add(@RequestHeader (USER_ID_IN_HEADER) @Positive Integer userId,
                                       @RequestBody @Valid BookItemRequestDto requestDto) {
-        log.info("Creating booking {}, userId={}", requestDto, userId);
+        log.info("Получен запрос на создание бронирования с данными: {}, userId={}", requestDto, userId);
         return bookingClient.add(userId, requestDto);
     }
 
@@ -44,21 +35,36 @@ public class BookingController {
     public ResponseEntity<Object> approve(@RequestHeader (USER_ID_IN_HEADER) @Positive Integer userId,
                                           @PathVariable @Positive Integer bookingId,
                                           @RequestParam Boolean approved) {
+        log.info("Получен запроса на обновление статуса брони с данными: userId = {}, bookingId = {}, approved = {}",
+                userId, bookingId, approved);
         return bookingClient.approve(userId, bookingId, approved);
-    }
-
-    @GetMapping("/owner")
-    public ResponseEntity<Object> getAllBookingsItemsUser(@RequestHeader(USER_ID_IN_HEADER) Integer userId,
-                                                    @RequestParam(defaultValue = "ALL") String stateParam) {
-        BookingState state = BookingState.from(stateParam)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-        return bookingClient.getAllBookingsItemsUser(userId, state);
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getById(@PathVariable @Positive Long bookingId,
                                              @RequestHeader(USER_ID_IN_HEADER) @Positive Integer userId) {
-        log.info("Get booking {}, userId={}", bookingId, userId);
+        log.info("Получен запрос на получение бронирований по id = {}, userId={}", bookingId, userId);
         return bookingClient.getById(userId, bookingId);
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getAllBookingsCurrentUser(@RequestHeader(USER_ID_IN_HEADER) @Positive Integer userId,
+                                                            @RequestParam(name = "state", defaultValue = "all") String stateParam) {
+        log.info("Получен запрос на получение всех бронирований пользователя с данными: userId = {}, stateParam = {}",
+                userId, stateParam);
+        BookingState state = BookingState.from(stateParam)
+                .orElseThrow(() -> new IllegalArgumentException("Неизвестный статус: " + stateParam));
+        log.info("Get booking with state {}, userId={}", stateParam, userId);
+        return bookingClient.getAllBookingsCurrentUser(userId, state);
+    }
+
+    @GetMapping("/owner")
+    public ResponseEntity<Object> getAllBookingsItemsUser(@RequestHeader(USER_ID_IN_HEADER) Integer userId,
+                                                          @RequestParam(name = "state", defaultValue = "ALL") String stateParam) {
+        log.info("Получен запрос на получение бронирований всех вещей пользователя с данными: userId = {}, stateParam = {}",
+                userId, stateParam);
+        BookingState state = BookingState.from(stateParam)
+                .orElseThrow(() -> new IllegalArgumentException("Неизвестный статус: " + stateParam));
+        return bookingClient.getAllBookingsItemsUser(userId, state);
     }
 }

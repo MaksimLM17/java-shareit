@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<Object> create(@RequestHeader(USER_ID_IN_HEADER) @Positive Integer userId,
                                          @RequestBody @Valid ItemDto itemDto) {
+        log.info("Получен запрос на создание новой вещи с данными: {}, userId = {}", itemDto, userId);
         return itemClient.create(userId, itemDto);
     }
 
@@ -32,22 +34,28 @@ public class ItemController {
     public ResponseEntity<Object> update(@RequestHeader(USER_ID_IN_HEADER) @Positive Integer userId,
                                          @PathVariable @Positive Integer itemId,
                                          @RequestBody @Valid UpdateItemDto updateItemDto) {
+        log.info("Получен запрос на обновление вещи с данными: {}, userId = {}, itemId = {}", updateItemDto, userId, itemId);
         return itemClient.update(userId, itemId, updateItemDto);
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getById(@RequestHeader(USER_ID_IN_HEADER) @Positive Integer userId,
                                           @PathVariable @Positive Integer itemId) {
+        log.info("Получен запрос на получение вещи по id: {}, userId = {}", itemId, userId);
         return itemClient.getById(userId, itemId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getItemsForUser(@RequestHeader(USER_ID_IN_HEADER) @Positive Integer userId) {
-        return itemClient.getItemsForUser(userId);
+    public ResponseEntity<Object> getItemsForUser(@RequestHeader(USER_ID_IN_HEADER) @Positive Integer userId,
+                                                  @RequestParam(required = false, defaultValue = "0") @PositiveOrZero Integer from,
+                                                  @RequestParam(required = false, defaultValue = "10") @Positive Integer size) {
+        log.info("Получен запрос на получение вещей пользователя userId = {}", userId);
+        return itemClient.getItemsForUser(userId, from, size);
     }
 
     @GetMapping("/search")
     public ResponseEntity<Object> searchItems(@RequestParam (required = false) String text) {
+        log.info("Получен запрос на поиск вещей по подстроке: {}", text);
         return itemClient.searchItems(text);
     }
 
@@ -55,6 +63,8 @@ public class ItemController {
     public ResponseEntity<Object> createComment(@RequestHeader(USER_ID_IN_HEADER) @Positive Integer userId,
                                                 @PathVariable @Positive Integer itemId,
                                                 @RequestBody @Valid CommentRequestDto commentRequestDto) {
+        log.info("Получен запрос на создание отзыва с данными: {}, userId = {}, itemId = {}",
+                commentRequestDto, userId, itemId);
         return itemClient.createComment(userId, itemId, commentRequestDto);
     }
 

@@ -2,6 +2,9 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.Status;
@@ -89,11 +92,16 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ResponseItemConciseDto> getItemsForUser(Integer userId) {
+    public List<ResponseItemConciseDto> getItemsForUser(Integer userId, Integer from, Integer size) {
         log.debug("Получен запрос на получение списка вещей пользователя с id = {}", userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId + " не найден!"));
-        return itemRepository.findItemsByUserId(userId).stream()
+
+        Pageable pageable = PageRequest.of(from / size, size);
+        Page<Item> itemPage = itemRepository.findItemsByUserId(userId, pageable);
+
+        return itemPage.getContent()
+                .stream()
                 .map(ItemMapper::mapToResponseConcise)
                 .toList();
     }

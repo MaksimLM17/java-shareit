@@ -3,7 +3,6 @@ package ru.practicum.shareit.request;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 

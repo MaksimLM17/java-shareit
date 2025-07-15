@@ -47,6 +47,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId +
                         " не найден, при получении своих запросов с ответами вещи!"));
         List<ItemRequest> requests = requestRepository.findAllByRequestorIdOrderByCreatedDesc(userId);
+        log.info("Отправлен список размером: {}", requests.size());
         return requests.stream()
                 .map(this::mapToResponses)
                 .toList();
@@ -59,6 +60,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId +
                         " не найден, при получении запросов других пользователей!"));
         List<ItemRequest> requests = requestRepository.findAllByRequestorIdNotOrderByCreatedDesc(userId);
+        log.info("Отправлен список размером: {}", requests.size());
         return requests.stream()
                 .map(requestMapper::mapToDto)
                 .toList();

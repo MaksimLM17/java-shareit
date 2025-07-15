@@ -17,7 +17,7 @@ public interface ItemService {
 
     ItemWithBookingDto getById(Integer userId, Integer itemId);
 
-    List<ResponseItemConciseDto> getItemsForUser(Integer userId);
+    List<ResponseItemConciseDto> getItemsForUser(Integer userId, Integer from, Integer size);
 
     List<ResponseItemConciseDto> searchItems(String text);
 

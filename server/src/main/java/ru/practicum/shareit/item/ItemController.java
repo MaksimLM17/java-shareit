@@ -37,8 +37,10 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ResponseItemConciseDto> getItemsForUser(@RequestHeader(USER_ID_IN_HEADER) Integer userId) {
-        return itemService.getItemsForUser(userId);
+    public Collection<ResponseItemConciseDto> getItemsForUser(@RequestHeader(USER_ID_IN_HEADER) Integer userId,
+                                                              @RequestParam(defaultValue = "0") Integer from,
+                                                              @RequestParam(defaultValue = "10") Integer size) {
+        return itemService.getItemsForUser(userId, from,size);
     }
 
     @GetMapping("/search")
