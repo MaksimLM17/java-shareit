@@ -34,7 +34,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId + " не найден, при создании запроса!"));
 
         ItemRequest itemRequest = new ItemRequest(itemRequestInDto.getDescription());
-        itemRequest.setRequestor(user);
+        itemRequest.setRequester(user);
         ItemRequest savedItemRequest = requestRepository.save(itemRequest);
         log.info("Запрос создан с данными: {}", savedItemRequest);
         return requestMapper.mapToDto(savedItemRequest);
@@ -46,7 +46,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId +
                         " не найден, при получении своих запросов с ответами вещи!"));
-        List<ItemRequest> requests = requestRepository.findAllByRequestorIdOrderByCreatedDesc(userId);
+        List<ItemRequest> requests = requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId);
         log.info("Отправлен список размером: {}", requests.size());
         return requests.stream()
                 .map(this::mapToResponses)
@@ -59,7 +59,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId +
                         " не найден, при получении запросов других пользователей!"));
-        List<ItemRequest> requests = requestRepository.findAllByRequestorIdNotOrderByCreatedDesc(userId);
+        List<ItemRequest> requests = requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(userId);
         log.info("Отправлен список размером: {}", requests.size());
         return requests.stream()
                 .map(requestMapper::mapToDto)

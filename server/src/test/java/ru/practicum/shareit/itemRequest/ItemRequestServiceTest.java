@@ -77,7 +77,7 @@ class ItemRequestServiceTest {
     void getAllOwn_shouldReturnRequestsWithResponses() {
         itemRequest.setId(1);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(requestRepository.findAllByRequestorIdOrderByCreatedDesc(userId))
+        when(requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId))
                 .thenReturn(List.of(itemRequest));
         when(itemRepository.findAllByRequestId(1)).thenReturn(List.of());
 
@@ -86,7 +86,7 @@ class ItemRequestServiceTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         verify(userRepository).findById(userId);
-        verify(requestRepository).findAllByRequestorIdOrderByCreatedDesc(userId);
+        verify(requestRepository).findAllByRequesterIdOrderByCreatedDesc(userId);
     }
 
     @Test
@@ -94,13 +94,13 @@ class ItemRequestServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> itemRequestService.getAllOwn(userId));
-        verify(requestRepository, never()).findAllByRequestorIdOrderByCreatedDesc(anyInt());
+        verify(requestRepository, never()).findAllByRequesterIdOrderByCreatedDesc(anyInt());
     }
 
     @Test
     void getAllOthers_shouldReturnOtherUsersRequests() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(requestRepository.findAllByRequestorIdNotOrderByCreatedDesc(userId))
+        when(requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(userId))
                 .thenReturn(List.of(itemRequest));
         when(requestMapper.mapToDto(itemRequest)).thenReturn(requestFullDto);
 
@@ -109,7 +109,7 @@ class ItemRequestServiceTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         verify(userRepository).findById(userId);
-        verify(requestRepository).findAllByRequestorIdNotOrderByCreatedDesc(userId);
+        verify(requestRepository).findAllByRequesterIdNotOrderByCreatedDesc(userId);
     }
 
     @Test
@@ -117,7 +117,7 @@ class ItemRequestServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> itemRequestService.getAllOthers(userId));
-        verify(requestRepository, never()).findAllByRequestorIdNotOrderByCreatedDesc(anyInt());
+        verify(requestRepository, never()).findAllByRequesterIdNotOrderByCreatedDesc(anyInt());
     }
 
     @Test

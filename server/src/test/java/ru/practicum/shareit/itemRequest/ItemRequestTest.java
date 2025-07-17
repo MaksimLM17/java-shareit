@@ -26,14 +26,14 @@ class ItemRequestTest {
         em.persist(user);
 
         ItemRequest request = new ItemRequest("Нужен гриль");
-        request.setRequestor(user);
+        request.setRequester(user);
 
         ItemRequest savedRequest = em.persistAndFlush(request);
 
         assertNotNull(savedRequest.getId());
         assertEquals("Нужен гриль", savedRequest.getDescription());
         assertNotNull(savedRequest.getCreated());
-        assertEquals(user.getId(), savedRequest.getRequestor().getId());
+        assertEquals(user.getId(), savedRequest.getRequester().getId());
     }
 
     @Test
@@ -64,7 +64,7 @@ class ItemRequestTest {
         ItemRequest request = new ItemRequest("Test description");
         assertNull(request.getId());
         assertEquals("Test description", request.getDescription());
-        assertNull(request.getRequestor());
+        assertNull(request.getRequester());
         assertNull(request.getCreated());
     }
 
@@ -83,11 +83,11 @@ class ItemRequestTest {
         em.persist(user);
 
         ItemRequest request = new ItemRequest("Test");
-        request.setRequestor(user);
+        request.setRequester(user);
         em.persistAndFlush(request);
         em.clear();
 
         ItemRequest foundRequest = em.find(ItemRequest.class, request.getId());
-        assertNotNull(foundRequest.getRequestor());
+        assertNotNull(foundRequest.getRequester());
     }
 }

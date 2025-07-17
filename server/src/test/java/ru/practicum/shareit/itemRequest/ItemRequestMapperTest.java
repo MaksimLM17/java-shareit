@@ -17,11 +17,11 @@ class ItemRequestMapperTest {
 
     @Test
     void toFullDto_ShouldMapCorrectly() {
-        User requestor = new User(1, "User", "user@example.com");
+        User requester = new User(1, "User", "user@example.com");
         ItemRequest request = new ItemRequest();
         request.setId(1);
         request.setDescription("Need item");
-        request.setRequestor(requestor);
+        request.setRequester(requester);
         request.setCreated(LocalDateTime.of(2023, 1, 1, 12, 0));
 
         ItemRequestFullDto dto = mapper.mapToDto(request);
