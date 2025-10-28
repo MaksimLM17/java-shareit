@@ -25,6 +25,5 @@ import lombok.NoArgsConstructor;
 public class UpdateUserDto {
 
     private String name;
-    @Email(message = "Некорректное значение email!")
     private String email;
 }

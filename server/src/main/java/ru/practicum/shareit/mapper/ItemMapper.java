@@ -12,16 +12,16 @@ public class ItemMapper {
     public static ItemDto mapToDto(Item item) {
         if (item.getRequest() != null) {
             return new ItemDto(item.getId(), item.getName(), item.getDescription(),
-                    item.isAvailable(), item.getOwner(), item.getRequest().getId());
+                    item.isAvailable(),item.getOwner().getId(), item.getRequest().getId());
         } else {
             return new ItemDto(item.getId(), item.getName(), item.getDescription(),
-                    item.isAvailable(), item.getOwner(), null);
+                    item.isAvailable(), item.getOwner().getId(), null);
         }
 
     }
 
     public static Item mapToModel(ItemDto itemDto) {
-        return new Item(itemDto.getName(), itemDto.getDescription(),itemDto.getAvailable(), itemDto.getOwner());
+        return new Item(itemDto.getName(), itemDto.getDescription(),itemDto.getAvailable(), null);
     }
 
     public static ResponseItemConciseDto mapToResponseConcise(Item item) {

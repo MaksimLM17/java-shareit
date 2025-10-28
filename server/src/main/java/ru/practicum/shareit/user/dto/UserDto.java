@@ -21,6 +21,5 @@ import lombok.Data;
 public class UserDto {
     private Integer id;
     private String name;
-    @Email(message = "Некорректное значение email!")
     private String email;
 }

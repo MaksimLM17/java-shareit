@@ -1,7 +1,5 @@
 package ru.practicum.shareit.user;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UpdateUserDto;
@@ -64,7 +62,7 @@ public class UserController {
      * @see UserService#create(UserDto)
      */
     @PostMapping
-    public UserDto create(@RequestBody @Valid UserDto userDto) {
+    public UserDto create(@RequestBody UserDto userDto) {
         return userService.create(userDto);
     }
 
@@ -93,8 +91,8 @@ public class UserController {
      * @see UserService#update(Integer, UpdateUserDto)
      */
     @PatchMapping("/{userId}")
-    public UserDto update(@PathVariable @Positive(message = "Id пользователя должно быть больше нуля!") Integer userId,
-                          @Valid @RequestBody UpdateUserDto updateUserDto) {
+    public UserDto update(@PathVariable  Integer userId,
+                          @RequestBody UpdateUserDto updateUserDto) {
         return userService.update(userId, updateUserDto);
     }
 
@@ -121,7 +119,7 @@ public class UserController {
      * @see UserService#get(Integer)
      */
     @GetMapping("/{userId}")
-    public UserDto get(@PathVariable @Positive(message = "Id пользователя должно быть больше нуля!") Integer userId) {
+    public UserDto get(@PathVariable Integer userId) {
         return userService.get(userId);
     }
 
@@ -141,7 +139,7 @@ public class UserController {
      * @see UserService#delete(Integer)
      */
     @DeleteMapping("/{userId}")
-    public void delete(@PathVariable @Positive(message = "Id пользователя должно быть больше нуля!") Integer userId) {
+    public void delete(@PathVariable Integer userId) {
         userService.delete(userId);
     }
 }
