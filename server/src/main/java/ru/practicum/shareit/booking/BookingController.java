@@ -37,6 +37,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/bookings")
 public class BookingController {
+
     /**
      * Сервис для выполнения бизнес-логики бронирований.
      */
