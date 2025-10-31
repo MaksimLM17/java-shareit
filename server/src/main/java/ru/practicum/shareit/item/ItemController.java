@@ -8,6 +8,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemWithBookingDto;
 import ru.practicum.shareit.item.dto.ResponseItemConciseDto;
 import ru.practicum.shareit.item.dto.UpdateItemDto;
+import ru.practicum.shareit.util.AppHeaders;
 
 import java.util.Collection;
 
@@ -48,15 +49,6 @@ public class ItemController {
     private final ItemService itemService;
 
     /**
-     * Заголовок HTTP запроса для передачи идентификатора пользователя.
-     * <p>
-     * Используется для аутентификации и авторизации пользователя.
-     * Должен присутствовать во всех запросах, кроме публичного поиска.
-     * </p>
-     */
-    private static final String USER_ID_IN_HEADER = "X-Sharer-User-Id";
-
-    /**
      * Создает новый предмет в системе.
      * <p>
      * Принимает JSON с данными предмета и сохраняет его в системе.
@@ -83,7 +75,7 @@ public class ItemController {
      *
      * @see ItemService#create(Integer, ItemDto)
      */    @PostMapping
-    public ItemDto create(@RequestHeader(USER_ID_IN_HEADER) Integer userId, @RequestBody ItemDto itemDto) {
+    public ItemDto create(@RequestHeader(AppHeaders.USER_ID) Integer userId, @RequestBody ItemDto itemDto) {
         return itemService.create(userId, itemDto);
     }
     /**
@@ -115,7 +107,7 @@ public class ItemController {
      * @see ItemService#update(Integer, Integer, UpdateItemDto)
      */
     @PatchMapping("/{itemId}")
-    public ItemDto update(@RequestHeader(USER_ID_IN_HEADER) Integer userId,
+    public ItemDto update(@RequestHeader(AppHeaders.USER_ID) Integer userId,
                           @PathVariable Integer itemId, @RequestBody UpdateItemDto updateItemDto) {
         return itemService.update(userId, itemId, updateItemDto);
     }
@@ -149,7 +141,7 @@ public class ItemController {
      * @see ItemService#getById(Integer, Integer)
      */
     @GetMapping("/{itemId}")
-    public ItemWithBookingDto getById(@RequestHeader(USER_ID_IN_HEADER) Integer userId, @PathVariable Integer itemId) {
+    public ItemWithBookingDto getById(@RequestHeader(AppHeaders.USER_ID) Integer userId, @PathVariable Integer itemId) {
         return itemService.getById(userId,itemId);
     }
     /**
@@ -185,7 +177,7 @@ public class ItemController {
      * @see ItemService#getItemsForUser(Integer, Integer, Integer)
      */
     @GetMapping
-    public Collection<ResponseItemConciseDto> getItemsForUser(@RequestHeader(USER_ID_IN_HEADER) Integer userId,
+    public Collection<ResponseItemConciseDto> getItemsForUser(@RequestHeader(AppHeaders.USER_ID) Integer userId,
                                                               @RequestParam(defaultValue = "0") Integer from,
                                                               @RequestParam(defaultValue = "10") Integer size) {
         return itemService.getItemsForUser(userId, from,size);
@@ -261,7 +253,7 @@ public class ItemController {
      */
     @PostMapping("/{itemId}/comment")
     public CommentResponseDto createComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable Integer itemId,
-                                            @RequestHeader(USER_ID_IN_HEADER) Integer userId) {
+                                            @RequestHeader(AppHeaders.USER_ID) Integer userId) {
         return itemService.createComment(commentRequestDto, itemId, userId);
     }
 }

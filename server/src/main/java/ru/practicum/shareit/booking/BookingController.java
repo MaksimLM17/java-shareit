@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.util.AppHeaders;
 
 import java.util.List;
 /**
@@ -42,15 +43,6 @@ public class BookingController {
     private final BookingService bookingService;
 
     /**
-     * Заголовок HTTP запроса для передачи идентификатора пользователя.
-     * <p>
-     * Используется для аутентификации и авторизации пользователя.
-     * Должен присутствовать во всех запросах к API бронирований.
-     * </p>
-     */
-    private static final String USER_ID_IN_HEADER = "X-Sharer-User-Id";
-
-    /**
      * Создает новое бронирование.
      * <p>
      * Принимает JSON с данными бронирования и сохраняет его в системе.
@@ -79,7 +71,7 @@ public class BookingController {
      * @see BookingService#add(BookingRequestDto, Integer)
      */
     @PostMapping
-    public BookingDto add(@RequestBody BookingRequestDto bookingRequestDto, @RequestHeader(USER_ID_IN_HEADER) Integer userId) {
+    public BookingDto add(@RequestBody BookingRequestDto bookingRequestDto, @RequestHeader(AppHeaders.USER_ID) Integer userId) {
         return bookingService.add(bookingRequestDto, userId);
     }
     /**
@@ -112,7 +104,7 @@ public class BookingController {
      * @see BookingService#approve(Integer, Integer, boolean)
      */
     @PatchMapping("/{bookingId}")
-    public BookingDto approve(@PathVariable Integer bookingId, @RequestHeader(USER_ID_IN_HEADER) Integer userId,
+    public BookingDto approve(@PathVariable Integer bookingId, @RequestHeader(AppHeaders.USER_ID) Integer userId,
                               @RequestParam Boolean approved) {
         return bookingService.approve(bookingId, userId, approved);
     }
@@ -155,7 +147,7 @@ public class BookingController {
      */
     @GetMapping("/{bookingId}")
     public BookingDto getById(@PathVariable Integer bookingId,
-                              @RequestHeader(USER_ID_IN_HEADER) Integer userId) {
+                              @RequestHeader(AppHeaders.USER_ID) Integer userId) {
         return bookingService.getById(bookingId, userId);
     }
 
@@ -195,7 +187,7 @@ public class BookingController {
      * @see BookingService#getAllBookingsCurrentUser(Integer, String)
      */
     @GetMapping
-    public List<BookingDto> getAllBookingsCurrentUser(@RequestHeader(USER_ID_IN_HEADER) Integer userId,
+    public List<BookingDto> getAllBookingsCurrentUser(@RequestHeader(AppHeaders.USER_ID) Integer userId,
                                                       @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getAllBookingsCurrentUser(userId, state.toUpperCase());
     }
@@ -227,7 +219,7 @@ public class BookingController {
      * @see BookingService#getAllBookingsItemsUser(Integer, String)
      */
     @GetMapping("/owner")
-    public List<BookingDto> getAllBookingsItemsUser(@RequestHeader(USER_ID_IN_HEADER) Integer userId,
+    public List<BookingDto> getAllBookingsItemsUser(@RequestHeader(AppHeaders.USER_ID) Integer userId,
                                                     @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getAllBookingsItemsUser(userId, state.toUpperCase());
     }
